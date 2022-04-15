@@ -23,7 +23,10 @@ fruits = { x = -5, y = -5 }
 ---
 
 function _init()
-	local anchor = { x = 8, y = 0 } setmetatable(anchor, vec2d)
+	direction.x = 0
+	direction.y = 1
+	nowdirection = direction
+	local anchor = { x = 8, y = 1 } setmetatable(anchor, vec2d)
 	body = {}
 	for i = 1, defaultlength do
         if (i == 1) then
@@ -33,11 +36,18 @@ function _init()
             body[i] = body[i - 1] + offset
         end
 	end
+	fruits = { x = -5, y = -5 }
+	
 	play = true
 end
 
 function _update()
-	if (play == false) return
+	if (play == false) then
+		if (btnp(4) or btnp(5)) then
+			_init()
+		end
+		return
+	end
 	if btn(0) then
 		if (nowdirection.x == 0) direction = { x = -1, y = 0 }
 	elseif btn(1) then
@@ -73,7 +83,7 @@ function move()
 end
 function collision()
 	if (body[1].x < 1 or body[1].x > stagesize.x) play = false
-	if (body[1].x < 1 or body[1].y > stagesize.y) play = false
+	if (body[1].y < 1 or body[1].y > stagesize.y) play = false
 	for i = 1, #body do
 		if i > 1 then
 			if (body[1].x == body[i].x and body[1].y == body[i].y) play = false
